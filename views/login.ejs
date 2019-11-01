@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="./css/gnb.css">
+
+    <title>LOGIN</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+
+        }
+
+        html,
+        body {
+            background-color: #deece0;
+            width: 100%;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        img {
+            margin: 30% 25%;
+            box-sizing: border-box;
+            display: block;
+            /* height: 50vw; */
+
+            width: 50vw;
+            /* border: 1px solid black; */
+        }
+
+        input {
+            border: none;
+            border-radius: 1vw;
+        }
+
+        form>input {
+            height: 8vw;
+            margin: 4vw 20% 0 20%;
+            padding: 3vw;
+            font-size: 5vw;
+
+            width: 60%;
+        }
+
+        #btns {
+            margin: 3% 10% 0 10%;
+            width: 80%;
+            display: flex;
+            padding: 0 7vw;
+        }
+
+        #btns input {
+            font-size: 5vw;
+            background: orange;
+            height: 10vw;
+            margin: 5vw 3vw;
+            flex: 1;
+            /* display:flexbox */
+            /* float: left; */
+        }
+    </style>
+</head>
+
+<body>
+    <form action="" method="POST">
+        <img src="img/profile.png" alt="">
+
+        <input name="id" type="text" placeholder="id">
+        <input name="password" type="password" placeholder="password">
+
+        <div id="btns">
+            <input type="submit" value="LOGIN">
+            <input type="button" value="SIGN IN">
+
+        </div>
+    </form>
+</body>
+
+</html>

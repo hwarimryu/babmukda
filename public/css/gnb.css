@@ -1,0 +1,61 @@
+@import url('https://fonts.googleapis.com/css?family=Gaegu:400,700&display=swap&subset=korean');* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    position: relative;
+    font-family: 'Gaegu';
+}
+
+html, body {
+    height: 100%;
+    width: 100%;
+}
+
+li {
+    list-style: none;
+    cursor: pointer;
+}
+
+a {
+    color: rgb(51, 51, 51);
+    font-weight: bold;
+    text-decoration: none;
+}
+
+#gnb {
+    padding-top: 5vw;
+    display: block;
+    float: left;
+    height: 100vh;
+    background-color: #dbf1d9;
+    width: 18vw;
+}
+
+#gnb li {
+    width: 18vw;
+    height: 18vw;
+    text-align: center;
+    line-height: 18vw;
+}
+#gnb img{
+    opacity: 0.5;
+}
+#gnb img.on{
+    opacity: 1;
+}
+
+article {
+    display: block;
+    float: left;
+    height: 100vh;
+    width: 82vw;
+    /* float: left; */
+    background-color: #fffadf;
+    overflow: auto;
+}
+
+.content-box {
+    height: 35vh;
+    padding: 5vw 4vw;
+    /* overflow: auto; */
+}

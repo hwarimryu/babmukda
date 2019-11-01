@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="../css/gnb.css">
+    <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+
+    <title>Document</title>
+    <style>
+        .content-box {
+            margin-top: 10vw;
+        }
+        .content {
+            margin-bottom: 5vw;
+            height: 18vh;
+        }
+        .content .img-box {
+            width: 45%;
+            height: 100%;
+            float: left;
+            overflow: hidden;
+        }
+        .content img {
+            min-width: 100%;
+            max-height: 100%;
+            border-radius: 3px;
+        }
+        .text-box {
+            float: left;
+        }
+        .title,
+        .name,
+        .date,
+        .state {
+            padding: 3vw 2vw 2vw 3vw;
+        }
+        .date,
+        .state {
+            font-size: 3.5vw;
+            float: left;
+        }
+        #lnb {
+            position: fixed;
+            right: 5vw;
+            top: 5vw;
+        }
+        button {
+            border: none;
+            background: none;
+        }
+    </style>
+    <script>
+        $(document).ready(function () {
+            $('#gnb img').eq(1).addClass('on')
+
+            function selectData() {
+                $('#gpitems').empty();
+                $.getJSON('/servicegp/allitems', function (data) {
+                    let image = ''
+                    $(data).each(function (index, item) {
+                        console.log(item.date)
+                        if (item.image == null || item.image == '') {
+                            image = '../img/no_image.png'
+                        } else { image = '/img/gp/' + item.image }
+                        var output = ''
+                        output += '  <a href="/servicegp/' + item.id + '">'
+                        output += '<div class="content">'
+                        output += '<div class="img-box"><img  src="' + image + '" name="image" alt=""></div>'
+                        output += '<div class="text-box"><div class="title" name="title">' + item.title + '</div>'
+                        output += '<div class="name" name="name">' + item.name + '</div>'
+                        output += ' <div class="state" name="state">' + item.reqnum + '/' + item.maxnum + '</div>'
+                        output += '<div class="date" name="date">' + item.date + '</div></div></div> </a>'
+                        $('#gpitems').append(output);
+                    });
+                });
+            }
+            selectData();
+        });
+    </script>
+</head>
+
+<body>
+    <% include ../gnb.ejs%>
+    <article>
+        <nav id="lnb">
+            <button type="reset">
+                새로고침
+            </button>
+            <button type="button" onclick="location.href='/servicegp/add'">
+            <button type="button" onclick="location.href='/servicegp/add'">
+                등록
+            </button>
+        </nav>
+        <div id="gpitems" class="content-box">
+        </div>
+    </article>
+</body>
+</html>

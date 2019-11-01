@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="../../css/gnb.css">
+    <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+
+    <title>Document</title>
+    <style>
+        form {
+            box-sizing: border-box;
+            padding-top: 10vw;
+            padding-left: 5vw;
+            height: 100%;
+        }
+
+        #lnb {
+            position: fixed;
+            right: 5vw;
+            bottom: 5vw;
+        }
+
+        button {
+
+            color: white;
+            border: none;
+            border-radius: 1.5vw;
+            font-size: 3.5vw;
+            background: rgb(99, 99, 99);
+            padding: 1.8vw;
+        }
+
+        table {
+            table-layout: fixed;
+            height: 80%;
+        }
+
+        input,
+        textarea {
+            padding: 1vw;
+            line-height: 4vw;
+            border: none;
+            width: 50vw;
+            border-radius: 3px;
+            background-color: #eceadd;
+        }
+
+        label {
+            display: inline-block;
+            font-size: 3.5vw;
+            width: 10vw;
+            text-align: center;
+            line-height: normal;
+            vertical-align: middle;
+            background-color: #eceadd;
+            cursor: pointer;
+            line-height: 4vw;
+            padding: 1vw;
+            border-radius: 1px;
+        }
+
+        input[type="file"] {
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            border: 0;
+        }
+
+        .upload-name {
+            display: inline-block;
+            margin-bottom: 2vw;
+            width: 38vw;
+            line-height: 4vw;
+            overflow: hidden;
+        }
+        td {
+            height: 8vw;
+        }
+
+        .td1 {
+            width: 18vw;
+        }
+
+        #picture {
+            max-height: 40vw;
+        }
+    </style>
+    <script>
+        $(document).ready(function () {
+            $('#gnb img').eq(2).addClass('on')
+
+            var fileTarget = $('.upload-hidden');
+            fileTarget.on('change', function () {
+                // 값이 변경되면 
+                readURL(this)
+
+                if (window.FileReader) { // modern browser 
+                    var filename = $(this)[0].files[0].name;
+                }
+                else { // old IE 
+                    var filename = $(this).val().split('/').pop().split('\\').pop(); // 파일명만 추출 
+                } // 추출한 파일명 삽입 
+                $(this).siblings('.upload-name').val(filename);
+
+
+
+            });
+            $('#put').click(function () {
+                var item = $("form")[0]
+                var itemForm = new FormData(item)
+                $.ajax({
+                    url: '/servicercp/edit/' + '<%=item.id%>',
+                    type: 'put',
+                    enctype: 'multipart/form-data',
+                    processData: false,
+                    contentType: false,
+                    data: itemForm
+                })
+            })
+        });
+
+        function readURL(input) {
+            if (input.files && input.files[0]) {
+                var reader = new FileReader()
+
+                reader.onload = function (e) {
+                    $('#picture').attr('src', e.target.result)
+                }
+                reader.readAsDataURL(input.files[0])
+            }
+        }
+    </script>
+</head>
+
+<body>
+    <% include ../gnb.ejs%>
+    <article>
+
+        <form name='frm' method="POST" enctype="multipart/form-data">
+            <table>
+                <tr>
+                    <td class="td1">title</td>
+                    <td class="td2"><input name="title" type="text" value="<%=item.title%>"></td>
+                </tr>
+               
+                <tr>
+                    <td class="td1">소요시간</td>
+                    <td class="td2"><input name="price" value="<%=item.time%>" type="text"></td>
+                </tr>
+                <tr>
+                    <td class="td1">재료</td>
+                    <td class="td2"><input name="addr" value="<%=item.ingredients%>" type="text"></td>
+                </tr>
+                <tr>
+                    <td class="td1" style="vertical-align:top">picture</td>
+                    <td colspan="2" class="td2">
+                        <input class="upload-name" value="파일선택" disabled="disabled">
+
+                        <label for="ex_file">FIND</label>
+                        <input type="file" name="image" id="ex_file" class="upload-hidden">
+                        <img src="/img/rcp/<%=item.image%>" id="picture" width="90%" alt="" class="upload-image"></td>
+                </tr>
+                <tr>
+                    <td class="td1" style="vertical-align:top">요리법</td>
+                    <td class="td2"><textarea cols="28" rows="15" name="details"><%=item.process%></textarea>
+                </tr>
+         
+
+            </table>
+            <nav id="lnb">
+                <button type="reset">
+                    RESET
+                </button>
+                <button type="button" id="put">
+                    OK
+                </button>
+                <button type="button" onclick="location.href='/servicercp/<%=item.id%>'">
+                    QUIT
+                </button>
+
+
+            </nav>
+
+
+
+
+
+        </form>
+
+
+    </article>
+</body>
+
+</html>

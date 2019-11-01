@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="../css/gnb.css">
+    <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+
+    <title>Document</title>
+    <style>
+        form {
+            box-sizing: border-box;
+            padding-top: 10vw;
+            padding-left: 5vw;
+            height: 100%;
+        }
+
+        #lnb {
+            position: fixed;
+            right: 5vw;
+            bottom: 5vw;
+        }
+
+        button {
+            color: white;
+            border: none;
+            border-radius: 1.5vw;
+            font-size: 3.5vw;
+            background: rgb(99, 99, 99);
+            padding: 1.8vw;
+        }
+
+        table {
+            table-layout: fixed;
+            height: 80%;
+        }
+
+        input,
+        textarea {
+            padding: 1vw;
+            line-height: 4vw;
+            border: none;
+            width: 50vw;
+            border-radius: 3px;
+            background-color: #eceadd;
+        }
+
+        label {
+            display: inline-block;
+            font-size: 3.5vw;
+            width: 10vw;
+            text-align: center;
+            line-height: normal;
+            vertical-align: middle;
+            background-color: #eceadd;
+            cursor: pointer;
+            line-height: 4vw;
+            padding: 1vw;
+            border-radius: 1px;
+        }
+
+        input[type="file"] {
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            border: 0;
+        }
+
+        #title {
+            font-size: 7vw;
+            text-align: center;
+            font-weight: bold;
+            line-height: 15vw;
+        }
+
+        .upload-name {
+            display: inline-block;
+            margin-bottom: 2vw;
+            width: 38vw;
+            line-height: 4vw;
+            overflow: hidden;
+        }
+
+        tr {
+            height: 10vw;
+        }
+
+        td {
+            height: 8vw;
+        }
+
+        .td1 {
+            width: 18vw;
+        }
+
+        #deleteConfirm {
+            display: none;
+            position: fixed;
+            padding: 10vw 5vw;
+            width: 74%;
+            height: 30%;
+            background: #deece0;
+            top: 55vw;
+        }
+        #deleteConfirm button{
+            background: none;
+            color: black;
+            font-size: 6vw;
+            font-weight: bold;
+        }
+        #deleteConfirm button:nth-of-type(2) {
+            position: absolute;
+            right: 5vw;
+            top: 35vw;
+            width: 15vw;
+           
+        }
+        #deleteConfirm button:nth-of-type(1) {
+            position: absolute;
+            left: 5vw;
+            top: 35vw;
+            width: 15vw;
+        }
+
+    </style>
+    <script>
+        $(document).ready(function () {
+            $('#gnb img').eq(1).addClass('on')
+
+            if ("<%=item.host%>" == "<%=userId%>") {
+                console.log("<%=item.host%>")
+                $('.host').show()
+                $('.guest').hide()
+            }
+            else {
+                $('.host').hide()
+                $('.guest').show()
+            }
+            $('$gnb img').eq[1].addClss('on');
+            
+        });
+        function confirmDelete() {
+            $("#deleteConfirm").show()
+        }
+        function reqDelete() {
+            location.href = "/servicegp/delete/<%=item.id%>"
+        }
+        function cancleDelete() {
+            $("#deleteConfirm").hide()
+        }
+    </script>
+</head>
+
+<body>
+    <% include ../gnb.ejs%>
+    <article>
+
+        <!-- <form name='frm'  method="POST"enctype="multipart/form-data"> -->
+        <div class="content-box">
+            <div id="title"><%=item.title%></div>
+            <table>
+
+                <tr>
+                    <td class="td1">name</td>
+                    <td class="td2"><%=item.name%></td>
+                </tr>
+                <tr>
+                    <td class="td1">price</td>
+                    <td class="td2"><%=item.price%></td>
+                </tr>
+                <tr>
+                    <td class="td1">address</td>
+                    <td class="td2"><%=item.addr%></td>
+                </tr>
+                <tr>
+                    <td class="td1">req</td>
+                    <td class="td2"><%=item.reqnum%> /<%=item.maxnum%></td>
+                </tr>
+                <tr>
+                    <td class="td1">date</td>
+                    <td class="td2"><%=item.date%></td>
+                </tr>
+                <tr>
+                    <td class="td1" style="vertical-align:top">picture</td>
+                    <td colspan="2" class="td2">
+
+                        <img src="/img/gp/<%=item.image%>" width="70%" alt=""></td>
+                </tr>
+                <tr>
+                    <td class="td1" style="vertical-align:top">detail</td>
+                    <td class="td2"><textarea readonly cols="28" rows="8"><%=item.details%></textarea>
+                </tr>
+            </table>
+
+            <nav id="lnb">
+                <button class="host" onclick="confirmDelete()" type="reset">
+                    DELETE
+                </button>
+                <button class="host" type="button" onclick="location.href='/servicegp/edit/<%=item.id%>'">
+                    EDIT
+                </button>
+                <button class="guest" onclick="location.href='/servicegp/request/<%=item.id%>'" type="reset">
+                    BUY
+                </button>
+            </nav>
+            <div id="deleteConfirm">
+                "<%=item.title%>"을/를 정말 삭제하시겠습니까??
+                <button onclick="reqDelete()">
+                    yes
+                </button>
+                <button onclick="cancleDelete()">
+                    no
+                </button>
+            </div>
+        </div>
+
+
+
+
+        <!-- </form> -->
+
+
+    </article>
+</body>
+
+</html>

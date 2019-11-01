@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title><%=item.title%></title>
+    <link rel="stylesheet" href="../css/gnb.css">
+    <script src="../../socket.io/socket.io.js"></script>
+    <script src="http://code.jquery.com/jquery-1.11.1.js"></script>
+
+<script>
+    var socket = io()
+    $(document).ready(function () {
+        var data = '<%-JSON.stringify(history)%>'
+        var history = JSON.parse(data)
+        var room = history[0].rid
+
+        $('#sendButton').click(function (e) {
+            var message = $("#message").val();
+            socket.emit('client message', { message: message, member: sessionStorage.userId });
+            $("#message").val('');
+            $.ajax({
+                url: '/chat/' + room,
+                type: 'put',
+                data: { message: message, member: sessionStorage.userId }
+            })
+            // e.defaultPrevented();
+
+        });
+        // 엔터키로 보내는 코드
+        $("#message").keypress(function (event) {
+            if (event.which == '13') {
+                if (!event.shiftKey) {
+                    event.preventDefault();
+                    $("#sendButton").click();
+                }
+            }
+        });
+
+        socket.on('server message', function (msgObj) {
+            console.log(msgObj)
+            if (msgObj.writer == sessionStorage.userId) {
+                $("#chatLog").append("<li><div class = 'my_message'><div class='tooltip'>" + msgObj.content + "</div></div><br><br></li>");
+                $("#chatLog").scrollTop($("#chatLog")[0].scrollHeight);
+            }
+            else {
+                $("#chatLog").append("<li><div class = 'you_message'><div class='tooltip'>" + msgObj.writer + " : " + msgObj.content + "</div></div><br><br></li>");
+                $("#chatLog").scrollTop($("#chatLog")[0].scrollHeight);
+            }
+        })
+
+        $(history).each(function (index, mssg) {
+            console.log(mssg)
+            console.log(sessionStorage.getItem('userId'))
+            var me = sessionStorage.getItem('userId')
+            if (me == mssg.writer) {
+                $('#chatLog').append(` <li><div class="my_message"><div class="tooltip">${mssg.content}</div></div></li> `)
+            }
+            else {
+                $('#chatLog').append(` <li><div class="you_message"><div class="tooltip"> ${mssg.writer} : ${mssg.content}</div></div></li>`)
+            }
+
+        })
+
+    })
+    function closeChat(){
+        socket.emit('leave');
+        history.back()
+    }
+</script>
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        word-break: break-all;
+        word-wrap: break-word;
+    }
+    #chatLog li {
+        top: 5vw;
+        height: 10vw;
+    }
+    .my_message {
+        position: relative;
+        width: 100%;
+        height: auto;
+    }
+    article {
+        padding: 5vw;
+    }
+    .my_message>.tooltip {
+        position: absolute;
+        background: #ffd381;
+        right: 3vw;
+        border-radius: 1vw;
+        padding: 1vw 2vw;
+        color: black;
+        font-size: 5vw;
+        text-align: right;
+    }
+    .you_message {
+        position: relative;
+        width: 100%;
+        height: auto;
+    }
+    .you_message>.tooltip {
+        position: absolute;
+        background: #bee6c4;
+        left: 3vw;
+        border-radius: 1vw;
+        padding: 1vw 2vw;
+        color: black;
+        font-size: 5vw;
+        text-align: left;
+    }
+    a:link {
+        color: black;
+        font-weight: bold;
+        text-decoration: none;
+    }
+    a:visited {
+        color: black;
+        font-weight: bold;
+        text-decoration: none;
+    }
+    a:hover {
+        color: orange;
+        font-weight: bold;
+        text-decoration: none;
+    }
+    textarea {
+        border: 0;
+    }
+    #sendButton {
+        vertical-align: top;
+        border: none;
+        height: 20vw;
+        background: none;
+        font-size: 5.5vw;
+        font-weight: bold;
+    }
+    .count {
+        display: inline-block;
+        width: 180px;
+        height: 40px;
+        background-color: white;
+        font-size: 15pt;
+        font-weight: 700;
+        line-height: 40px;
+    }
+    .two textarea {
+        margin-top: 5px;
+    }
+    .blank {
+        display: inline-block;
+        width: 180px;
+        height: 63px;
+        background-color: #fff;
+        font-size: 15pt;
+        font-weight: 700;
+        line-height: 65px;
+    }
+    textarea {
+        resize: none;
+    }
+    #chatLog {
+        background-color: white;
+        width: 100%;
+        height: 70vh;
+        border-radius: 5vw;
+    }
+    #message {
+        width: 75%;
+        height: 66px;
+        border-radius: 10px;
+        margin-right: 1%;
+    }
+    .menu {
+        text-align: left;
+    }
+</style>
+</head>
+<body>
+    <% include ./gnb.ejs%>
+    <article>
+        <section class="one">
+            <div class="menu" style="font-size:15pt;"><a href="/servicegp/<%=item.id%>"><%=item.title%></a> | <a
+                    onclick="closeChat()">닫기</a></div>
+            <form id="chat" method="POST">
+                <pre id="chatLog" style="overflow:auto;" readonly>
+
+                </pre>
+                <br>
+                <textarea name="message" id="message" rows="4" cols="53"></textarea>
+                <input type="button" id="sendButton" value="SEND" style="width:20%;border-radius: 10px">
+            </form>
+        </section>
+    </article>
+
+</body>
+
+</html>

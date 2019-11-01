@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="../css/gnb.css">
+    <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+
+    <title>Document</title>
+    <style>
+        .content-box {
+            margin-top: 10vw;
+            height: 100%;
+            overflow-y: scroll;
+        }
+        .content {
+            margin-bottom: 8vw;
+            height: 30vh;
+        }
+        .content .img-box {
+            margin-left: 2vw;
+            width: 95%;
+            height: 80%;
+            overflow: hidden;
+        }
+        .img-box img {
+            min-width: 100%;
+            object-fit: cover;
+            border-radius: 3px;
+        }
+        .text-box {
+            margin-top: 1.5vw;
+            width: 100%;
+        }
+        .title {
+            padding: 0vw 2vw 0vw 0vw;
+            font-size: 6vw;
+        }
+        .host {
+            position: absolute;
+            top: 7.8vw;
+            right: 2vw;
+            font-size: 4vw;
+        }
+        .time {
+            position: absolute;
+            top: 7.8vw;
+            left: 5.5vw;
+            font-size: 4vw;
+        }
+        .content img {
+            width: 4vw;
+            display: inline-block;
+        }
+        #lnb {
+            position: fixed;
+            right: 5vw;
+            top: 5vw;
+        }
+        button {
+            border: none;
+            background: none;
+        }
+    </style>
+    <script>
+        $(document).ready(function () {
+            // 데이터를 보여주는 함수
+            $('#gnb img').eq(2).addClass('on')
+
+            function selectData() {
+                $('#rcpitems').empty();
+                $.getJSON('/servicercp/allitems', function (data) {
+                    let image = ''
+                    $(data).each(function (index, item) {
+                        console.log(item)
+                        if (item.image == null || item.image == '') {
+                            image = '../img/no_image.png'
+                        } else { image = '/img/rcp/' + item.image }
+                        var output = ''
+                        output += '  <a href="/servicercp/' + item.id + '">'
+                        output += '<div class="content">'
+                        output += '<div class="img-box"><img  src="' + image + '" name="image" alt=""></div>'
+                        output += '<div class="text-box"><div class="title" name="title">' + item.title + '</div>'
+                        output += '<img src="../img/rcp_timer.png" ><div class="time" name="time">' + item.time + '</div>'
+                        output += '<div class="host" name="host">' + item.host + '</div></div></div> </a>'
+                        $('#rcpitems').append(output);
+                    });
+                });
+            }
+            selectData();
+        });
+    </script>
+</head>
+
+<body>
+    <% include ../gnb.ejs%>
+    <article>
+        <nav id="lnb">
+            <button type="reset">
+                새로고침
+            </button>
+            <button type="button" onclick="location.href='/servicercp/add'">
+            <button type="button" onclick="location.href='/servicercp/add'">
+                등록
+            </button>
+        </nav>
+        <div id="rcpitems" class="content-box">
+        </div>
+    </article>
+</body>
+</html>

@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="../css/gnb.css">
+    <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+    <title>myChat</title>
+    <script>
+        var userId
+        $(document).ready(function () {
+            $('#gnb img').eq(3).addClass('on')
+
+            userId=sessionStorage.getItem("userId")
+        })
+        function trustFunc(rid) {
+            
+            $.get('/trust/'+rid,function(data){
+                var result = '<input type="hidden" name = "rid" value='+rid+' >'
+                if(data.length==1&&data[0].yet==userId){
+                        
+                        result =`이미 완료하셨습니다.<button onclick="cancleTrust()" type="button" >취소</button>`
+                        $('#trustForm').html(result)
+                    }else{
+                $(data).each(function (index, member) {
+                    console.log(member)
+                    console.log(userId)
+                     if (member.yet != userId) {
+                        result += `
+                        <tr>
+                        <td>${member.yet}</td>
+                        <input type="hidden" name = "pname" value="${member.yet}" >
+                        <input type="hidden" name = "tid" value="${member.tid}" >
+                        <td>
+                        <select name="point">
+                            <option selected >-</option>
+                            <option value="-1">-1</option>
+                            <option value="0">0</option>
+                            <option value="1">+1</option>
+                        </select>
+                        </td>
+                        </tr>`
+                    }
+                })
+                $('#trustForm').append(result)
+            }
+            })
+            $("#trustForm").show()
+
+        }
+        function cancleTrust() {
+            $("#trustForm").hide()
+        }
+    </script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        html,
+        body {
+            width: 100%;
+            height: 100vh;
+            overflow: hidden;
+        }
+        article {
+            display: block;
+            float: left;
+            height: 100vh;
+            width: 82vw;
+            padding: 0 5vw;
+        }
+        table{
+            width: 100%;
+        }
+        h1 {
+            margin: 10vw 0vw 10vw 0vw;
+            width: 100%;
+            text-align: center;
+        }
+        a:link {
+            color: #000000;
+            text-decoration: none
+        }
+        a:visited {
+            color: #000000;
+            text-decoration: none
+        }
+        a:active {
+            color: #000000;
+            text-decoration: none
+        }
+        a:hover {
+            color: red;
+            text-decoration: none
+        }
+        article>div {
+            margin-top: 5vw;
+            margin-bottom: 2vw;
+            width: 100%;
+            height: 5vw;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        tr {
+            width: 100%;
+        }
+        article td{
+            font-size: 4vw;
+            font-weight: bold;
+            overflow:hidden;
+            text-align: center;
+        }
+        #trustForm {
+            display: none;
+            position: fixed;
+            padding: 10vw 5vw;
+            width: 70%;
+            height: 30%;
+            background: #deece0;
+            top: 55vw;
+            color: #000000;
+        }
+        #trustForm td{
+            padding: 0 40px 0 0 !important;
+            
+            text-align: center;
+        }
+        #trustForm button{
+            background: none;
+            color: black;
+            font-size: 6vw;
+            font-weight: bold;
+            border: none;
+        }
+        #trustForm button:nth-of-type(2) {
+            position: absolute;
+            right: 5vw;
+            top: 35vw;
+            width: 15vw;
+        }
+        #trustForm button:nth-of-type(1) {
+            position: absolute;
+            left: 5vw;
+            top: 35vw;
+            width: 15vw;
+        }
+    </style>
+</head>
+
+<body>
+    <% include ./gnb.ejs%>
+    <article>
+        <h1>채팅방</h1>
+        <!-- <div id="chatlist" onclick="getChat()"></div> -->
+        <table class="submenu">
+            <% data.forEach(function(item){ %>
+                <tr>
+                    <%if(item.state==2){%>
+                    <td onclick="window.location='/servicegp/<%=item.gpid%>'"><%=item.title%></td>
+                    <td onclick="trustFunc(<%=item.rid%>)">신뢰도 평가하기</td>    
+                    <%}else if(item.host==item.member){%>
+                    <td onclick="window.location='/servicegp/<%=item.gpid%>'"><%=item.title%></td>
+                    <td onclick="window.location='/chat/<%=item.rid%>'">CHAT 가기</td>
+                    <%}else{%>
+                    <td onclick="window.location='/servicegp/<%=item.gpid%>'"><%=item.title%></td>
+                    <td onclick="window.location='/chat/<%=item.rid%>'">CHAT 가기</td>
+                    <td onclick="window.location='/servicegp/cancle_gp/<%=item.rid%>'">CHAT 종료</td>
+                    <%}%>
+                </tr>
+            <%})%>
+        </table>
+
+        <form id="trustForm" action="/trust_success" method="post">
+            
+                <button type="submit" >완료</button>
+                <button type="button" onclick="cancleTrust()" >취소</button>
+
+            </form>
+    </article>
+</body>
+</html>
