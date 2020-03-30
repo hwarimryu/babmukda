@@ -15,4 +15,4 @@ Node.js Socket.IO HTML5 CSS3 MySQL jQuery
 - 최근 구매한 품목 3개를 기반으로 해당 식재료가 포함된 조리법을 메인 페이지에서 추천하는 기능 구현
 
 팀구성 ― 프론트 디자인1, 서버/프론트 개발2 - 서버/프론트 개발을 담당
-https://github.com/hwarimryu/about/babmukda
+데모영상 https://youtu.be/6CmBGsMuHt8
